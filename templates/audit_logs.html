@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Audit Logs - Information Security Lab{% endblock %}
+
+{% block content %}
+<div class="audit-logs">
+    <h1>Audit Logs</h1>
+    <p>Viewing the last 100 audit log entries</p>
+    
+    {% if logs %}
+        <table class="audit-table">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>File</th>
+                    <th>Details</th>
+                    <th>IP Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>{{ log.user.username if log.user else 'N/A' }}</td>
+                    <td><span class="action-badge action-{{ log.action }}">{{ log.action }}</span></td>
+                    <td>{{ log.file.filename if log.file else 'N/A' }}</td>
+                    <td>{{ log.details }}</td>
+                    <td>{{ log.ip_address or 'N/A' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No audit logs found.</p>
+    {% endif %}
+    
+    <div class="dashboard-actions">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}
+
